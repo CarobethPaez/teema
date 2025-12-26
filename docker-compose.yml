@@ -1,6 +1,24 @@
 version: '3.8'
 
 services:
+  server:
+    build: ./server
+    container_name: task-manager-server
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgrespassword@postgres:5432/taskmanager"
+
+  client:
+    build: ./client
+    container_name: task-manager-client
+    ports:
+      - "5173:5173"
+    depends_on:
+      - server
+
   postgres:
     image: postgres:15
     container_name: task-manager-db
