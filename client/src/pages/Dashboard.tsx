@@ -36,7 +36,7 @@ const Dashboard = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
                 <div>
                     <h1>Task Manager</h1>
-                    <p style={{ color: 'var(--text-secondary)' }}>Welcome back, {user?.name}</p>
+                    <p style={{ color: 'var(--text-secondary)' }}>Esto es una prueba, {user?.name}</p>
                 </div>
                 <div style={{ display: 'flex', gap: '1rem' }}>
                     <button
