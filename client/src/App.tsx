@@ -4,7 +4,7 @@ import { SocketProvider } from './context/SocketContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Dashboard from './components/Dashboard/Dashboard';
+import NewDashboard from './components/Dashboard/Dashboard'; // Usamos un nombre único
 import ProjectDetails from './pages/ProjectDetails';
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route element={<ProtectedRoute />}>
-              <Route path="/" element={<Dashboard />} />
+              <Route path="/" element={<NewDashboard />} />
               <Route path="/projects/:id" element={<ProjectDetails />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
