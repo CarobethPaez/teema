@@ -1,0 +1,101 @@
+.container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: sans-serif;
+  color: #333;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.addButton {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.addButton:hover {
+  background-color: #0056b3;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.statCard {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.pending { border-bottom: 4px solid #ffc107; }
+.completed { border-bottom: 4px solid #28a745; }
+
+.statCard h3 { margin: 0; font-size: 0.9rem; color: #666; }
+.statCard p { font-size: 2rem; font-weight: bold; margin: 0.5rem 0 0; }
+
+.emptyState {
+  background: #f8f9fa;
+  padding: 3rem;
+  border-radius: 12px;
+  text-align: center;
+  border: 2px dashed #dee2e6;
+  color: #adb5bd;
+}
+
+/* Estilos para la lista de tareas */
+.taskList {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+}
+
+.taskItem {
+  background: white;
+  padding: 1rem 1.5rem;
+  margin-bottom: 0.8rem;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-left: 5px solid #dee2e6; /* Borde neutral por defecto */
+}
+
+.taskItem:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Badge de estado */
+.statusBadge {
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  background: #f1f3f5;
+  color: #495057;
+}
+
+/* Variaciones visuales según el contenido (Opcional: lógica de clases dinámica) */
+.taskItem span:first-child {
+  font-weight: 500;
+  color: #212529;
+}
