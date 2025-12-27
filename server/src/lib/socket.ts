@@ -1,5 +1,7 @@
 import { Server as HttpServer } from 'http';
 import { Server, Socket } from 'socket.io';
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
 let io: Server;
 
@@ -15,10 +17,29 @@ export const initSocket = (httpServer: HttpServer) => {
         console.log('User connected:', socket.id);
 
         // Escuchar creación de tareas
-        socket.on('task:create', (newTask) => {
-            console.log('🚀 Tarea recibida:', newTask);
-            io.emit('task:received', newTask); 
+        // Agregamos 'async' antes de (newTask)
+    socket.on('task:create', async (taskData) => {
+    console.log('🚀 Recibido para guardar:', taskData);
+
+    try {
+        // Guardamos físicamente en PostgreSQL
+        const savedTask = await prisma.task.create({
+            data: {
+                title: taskData.title,
+                status: taskData.status || 'todo',
+                // Si tienes un proyecto por defecto o ID de proyecto:
+                projectId: taskData.projectId || "ID_DE_UN_PROYECTO_EXISTENTE" 
+            }
         });
+
+        console.log('💾 Tarea guardada en BD con ID:', savedTask.id);
+
+        // Emitimos la tarea YA GUARDADA (con su ID real de la BD) a todos
+        io.emit('task:received', savedTask); 
+    } catch (error) {
+        console.error('❌ Error al guardar en Prisma:', error);
+    }
+});
 
         socket.on('join_project', (projectId: string) => {
             socket.join(`project:${projectId}`);
