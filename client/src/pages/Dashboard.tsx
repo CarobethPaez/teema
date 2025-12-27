@@ -11,7 +11,7 @@ import { useSocket } from '../context/SocketContext'; // Asegúrate de que la ru
 interface Task {
   id: string;
   title: string;
-  status: 'pending' | 'completed';
+  status: 'todo' | 'in-progress' | 'done';
 }
 
 const Dashboard: React.FC = () => {
@@ -26,23 +26,23 @@ const Dashboard: React.FC = () => {
   // Estados para Tareas (lo nuevo)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([
-    { id: '1', title: 'Configurar Docker', status: 'completed' },
-    { id: '2', title: 'Sincronizar Prisma', status: 'completed' }
+    { id: '1', title: 'Configurar Docker', status: 'done' },
+    { id: '2', title: 'Sincronizar Prisma', status: 'done' }
   ]);
 
   const stats = {
     total: tasks.length,
-    pending: tasks.filter(t => t.status === 'pending').length,
-    completed: tasks.filter(t => t.status === 'completed').length
+    todo: tasks.filter(t => t.status === 'todo').length,
+    inProgress: tasks.filter(t => t.status === 'in-progress').length,
+    done: tasks.filter(t => t.status === 'done').length
   };
 
   const handleAddTask = (title: string) => {
-  // 1. Creamos el objeto de la tarea
-  const newTask: Task = {
-    id: Date.now().toString(),
-    title,
-    status: 'pending'
-  };
+    const newTask: Task = {
+      id: Date.now().toString(),
+      title,
+      status: 'todo' // Cambiado de 'pending' a 'todo'
+    };
 
   // 2. Avisamos al servidor vía Socket.io (¡Lo nuevo!)
   if (socket) {
@@ -71,8 +71,8 @@ const Dashboard: React.FC = () => {
 
       <section className={styles.statsGrid}>
         <div className={styles.statCard}><h3>Total</h3><p>{stats.total}</p></div>
-        <div className={`${styles.statCard} ${styles.pending}`}><h3>Pendientes</h3><p>{stats.pending}</p></div>
-        <div className={`${styles.statCard} ${styles.completed}`}><h3>Completadas</h3><p>{stats.completed}</p></div>
+        <div className={`${styles.statCard} ${styles.pending}`}><h3>Pendientes</h3><p>{stats.todo}</p></div>
+        <div className={`${styles.statCard} ${styles.completed}`}><h3>Completadas</h3><p>{stats.done}</p></div>
       </section>
 
       <main className={styles.mainContent}>
