@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, useRef } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { useAuth } from './AuthContext';
 
@@ -14,14 +14,16 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     const socketRef = useRef<Socket | null>(null);
 
     useEffect(() => {
+        // Solo intentamos conectar si el usuario está logueado
         if (isAuthenticated) {
             if (!socketRef.current) {
+                // REVISA EL PUERTO: Si tu servidor Node corre en el 4000, cámbialo aquí
                 const socketInstance = io('http://localhost:3000', {
                     reconnection: true,
                 });
 
                 socketInstance.on('connect', () => {
-                    console.log('Socket connected:', socketInstance.id);
+                    console.log('✅ Socket conectado:', socketInstance.id);
                 });
 
                 socketRef.current = socketInstance;
@@ -36,6 +38,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
                 }
             };
         } else {
+            // Si el usuario cierra sesión, desconectamos el socket
             if (socketRef.current) {
                 socketRef.current.disconnect();
                 socketRef.current = null;
@@ -51,10 +54,11 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
     );
 };
 
+// Este es el hook que usaremos en el Dashboard
 export const useSocket = () => {
     const context = useContext(SocketContext);
     if (!context) {
         throw new Error('useSocket must be used within a SocketProvider');
     }
-    return context;
+    return context; // Retorna un objeto { socket: ... }
 };

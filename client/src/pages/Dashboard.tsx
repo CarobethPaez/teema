@@ -5,6 +5,7 @@ import type { Project } from '../services/projectService'; // Se agrega 'type' p
 import { useNavigate } from 'react-router-dom';
 import TaskModal from '../components/Dashboard/TaskModal'; // Ruta simplificada
 import styles from '../components/Dashboard/Dashboard.module.css'; // Ruta simplificada
+import { useSocket } from '../context/SocketContext'; // Asegúrate de que la ruta sea correcta
 
 // 1. Definimos la interfaz que faltaba
 interface Task {
@@ -15,6 +16,7 @@ interface Task {
 
 const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
+  const { socket } = useSocket();
   const navigate = useNavigate();
   
   // Estados para Proyectos (lo que ya tenías)
@@ -35,13 +37,22 @@ const Dashboard: React.FC = () => {
   };
 
   const handleAddTask = (title: string) => {
-    const newTask: Task = {
-      id: Date.now().toString(),
-      title,
-      status: 'pending'
-    };
-    setTasks([newTask, ...tasks]);
+  // 1. Creamos el objeto de la tarea
+  const newTask: Task = {
+    id: Date.now().toString(),
+    title,
+    status: 'pending'
   };
+
+  // 2. Avisamos al servidor vía Socket.io (¡Lo nuevo!)
+  if (socket) {
+    console.log('Enviando tarea al servidor:', newTask);
+    socket.emit('task:create', newTask); 
+  }
+
+  // 3. Actualizamos la lista en pantalla localmente
+  setTasks(prevTasks => [newTask, ...prevTasks]);
+};
 
   return (
     <div className={styles.container}>
