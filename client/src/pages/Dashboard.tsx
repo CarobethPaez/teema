@@ -37,21 +37,18 @@ const Dashboard: React.FC = () => {
     done: tasks.filter(t => t.status === 'done').length
   };
 
-  const handleAddTask = (title: string) => {
-    const newTask: Task = {
-      id: Date.now().toString(),
-      title,
-      status: 'todo' // Cambiado de 'pending' a 'todo'
-    };
+  const handleAddTask = (taskData: { title: string; status: 'todo' | 'in-progress' | 'done' }) => {
+  const newTask: Task = {
+    id: Date.now().toString(),
+    title: taskData.title,
+    status: taskData.status
+  };
 
-  // 2. Avisamos al servidor vía Socket.io (¡Lo nuevo!)
   if (socket) {
-    console.log('Enviando tarea al servidor:', newTask);
-    socket.emit('task:create', newTask); 
+    socket.emit('task:create', newTask);
   }
-
-  // 3. Actualizamos la lista en pantalla localmente
-  setTasks(prevTasks => [newTask, ...prevTasks]);
+  
+  setTasks(prev => [newTask, ...prev]);
 };
 
   return (

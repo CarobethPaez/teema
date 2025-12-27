@@ -4,7 +4,8 @@ import styles from './Dashboard.module.css';
 interface TaskModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAdd: (title: string) => void;
+  // Antes era (title: string) => void
+  onAdd: (task: { title: string; status: 'todo' | 'in-progress' | 'done' }) => void;
 }
 
 const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onAdd }) => {
@@ -13,13 +14,17 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onAdd }) => {
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (title.trim()) {
-      onAdd(title);
-      setTitle('');
-      onClose();
-    }
-  };
+  e.preventDefault();
+  if (title.trim()) {
+    // Agregamos el objeto con el estado 'todo'
+    onAdd({ 
+      title: title.trim(), 
+      status: 'todo' 
+    });
+    setTitle('');
+    onClose();
+  }
+};
 
   return (
     <div className={styles.modalOverlay}>
