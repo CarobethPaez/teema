@@ -1,107 +1,88 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { projectService } from '../services/projectService';
-import type { Project } from '../services/projectService';
+import type { Project } from '../services/projectService'; // Se agrega 'type' para corregir ts(1484)
 import { useNavigate } from 'react-router-dom';
-import CreateProjectModal from '../components/CreateProjectModal';
+import TaskModal from '../components/Dashboard/TaskModal'; // Ruta simplificada
+import styles from '../components/Dashboard/Dashboard.module.css'; // Ruta simplificada
 
-const Dashboard = () => {
-    const { user, logout } = useAuth();
-    const [projects, setProjects] = useState<Project[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const navigate = useNavigate();
+// 1. Definimos la interfaz que faltaba
+interface Task {
+  id: string;
+  title: string;
+  status: 'pending' | 'completed';
+}
 
-    const fetchProjects = async () => {
-        try {
-            const data = await projectService.getAll();
-            setProjects(data);
-        } catch (error) {
-            console.error('Failed to fetch projects', error);
-        } finally {
-            setIsLoading(false);
-        }
+const Dashboard: React.FC = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  
+  // Estados para Proyectos (lo que ya tenías)
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  
+  // Estados para Tareas (lo nuevo)
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [tasks, setTasks] = useState<Task[]>([
+    { id: '1', title: 'Configurar Docker', status: 'completed' },
+    { id: '2', title: 'Sincronizar Prisma', status: 'completed' }
+  ]);
+
+  const stats = {
+    total: tasks.length,
+    pending: tasks.filter(t => t.status === 'pending').length,
+    completed: tasks.filter(t => t.status === 'completed').length
+  };
+
+  const handleAddTask = (title: string) => {
+    const newTask: Task = {
+      id: Date.now().toString(),
+      title,
+      status: 'pending'
     };
+    setTasks([newTask, ...tasks]);
+  };
 
-    useEffect(() => {
-        fetchProjects();
-    }, []);
-
-    const handleProjectClick = (projectId: string) => {
-        navigate(`/projects/${projectId}`);
-    };
-
-    return (
-        <div className="container" style={{ paddingTop: '2rem' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                <div>
-                    <h1>Task Manager</h1>
-                    <p style={{ color: 'var(--text-secondary)' }}>Esto es una prueba, {user?.name}</p>
-                </div>
-                <div style={{ display: 'flex', gap: '1rem' }}>
-                    <button
-                        className="btn btn-primary"
-                        onClick={() => setIsModalOpen(true)}
-                    >
-                        + New Project
-                    </button>
-                    <button
-                        className="btn"
-                        style={{ border: '1px solid var(--border)' }}
-                        onClick={logout}
-                    >
-                        Logout
-                    </button>
-                </div>
-            </div>
-
-            {isLoading ? (
-                <div>Loading projects...</div>
-            ) : projects.length === 0 ? (
-                <div className="card" style={{ padding: '3rem', textAlign: 'center', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius)' }}>
-                    <h3 style={{ marginBottom: '1rem' }}>No projects yet</h3>
-                    <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>Get started by creating your first project</p>
-                    <button className="btn btn-primary" onClick={() => setIsModalOpen(true)}>Create Project</button>
-                </div>
-            ) : (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
-                    {projects.map((project) => (
-                        <div
-                            key={project.id}
-                            className="card"
-                            style={{
-                                padding: '1.5rem',
-                                backgroundColor: 'var(--surface)',
-                                borderRadius: 'var(--radius)',
-                                cursor: 'pointer',
-                                transition: 'transform 0.2s',
-                                border: '1px solid var(--border)'
-                            }}
-                            onClick={() => handleProjectClick(project.id)}
-                            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
-                            onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-                        >
-                            <h3 style={{ marginBottom: '0.5rem' }}>{project.name}</h3>
-                            <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem', height: '40px', overflow: 'hidden' }}>
-                                {project.description || 'No description'}
-                            </p>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                                <span>Tasks: {project._count?.tasks || 0}</span>
-                                <span>Members: {project._count?.members || 1}</span>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )}
-
-            {isModalOpen && (
-                <CreateProjectModal
-                    onClose={() => setIsModalOpen(false)}
-                    onProjectCreated={fetchProjects}
-                />
-            )}
+  return (
+    <div className={styles.container}>
+      <header className={styles.header}>
+        <div>
+          <h1>Mi Task Manager</h1>
+          <p>Bienvenido, {user?.name}</p>
         </div>
-    );
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <button className={styles.addButton} onClick={() => setIsModalOpen(true)}>
+            + Nueva Tarea
+          </button>
+          <button onClick={logout} className={styles.cancelBtn}>Salir</button>
+        </div>
+      </header>
+
+      <section className={styles.statsGrid}>
+        <div className={styles.statCard}><h3>Total</h3><p>{stats.total}</p></div>
+        <div className={`${styles.statCard} ${styles.pending}`}><h3>Pendientes</h3><p>{stats.pending}</p></div>
+        <div className={`${styles.statCard} ${styles.completed}`}><h3>Completadas</h3><p>{stats.completed}</p></div>
+      </section>
+
+      <main className={styles.mainContent}>
+        <h2>Actividad Reciente</h2>
+        <ul className={styles.taskList}>
+          {tasks.map(task => (
+            <li key={task.id} className={styles.taskItem}>
+              <span>{task.title}</span>
+              <span className={styles.statusBadge}>{task.status}</span>
+            </li>
+          ))}
+        </ul>
+      </main>
+
+      <TaskModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onAdd={handleAddTask} 
+      />
+    </div>
+  );
 };
 
 export default Dashboard;
