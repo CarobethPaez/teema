@@ -28,7 +28,8 @@ export const initSocket = (httpServer: HttpServer) => {
                 title: taskData.title,
                 status: taskData.status || 'todo',
                 // Si tienes un proyecto por defecto o ID de proyecto:
-                projectId: taskData.projectId || "ID_DE_UN_PROYECTO_EXISTENTE" 
+                // Línea 31 - Cambia el texto genérico por el ID real
+            projectId: taskData.projectId || "612f05ad-1d9a-4a1e-8775-52151755e431"
             }
         });
 

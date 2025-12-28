@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { prisma } from '../lib/prisma';
-import { getIO } from '../lib/socket';
+import { prisma } from '../lib/prisma.js';
+import { getIO } from '../lib/socket.js';
 
 interface AuthRequest extends Request {
     user?: any;

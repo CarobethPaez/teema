@@ -1,13 +1,10 @@
 import { PrismaClient } from '@prisma/client';
-import { Pool } from 'pg';
-import { PrismaPg } from '@prisma/adapter-pg';
-import dotenv from 'dotenv';
 
-dotenv.config();
+// Forzamos la URL directamente en el entorno global de Node antes de crear el cliente
+process.env.DATABASE_URL = "postgresql://postgres:postgrespassword@localhost:5433/taskmanager?schema=public";
 
-const connectionString = `${process.env.DATABASE_URL}`;
+// Creamos el cliente de la forma más sencilla. 
+// Esto evita el error de "Unknown property" y el de "non-empty options".
+export const prisma = new PrismaClient();
 
-const pool = new Pool({ connectionString });
-const adapter = new PrismaPg(pool);
-
-export const prisma = new PrismaClient({ adapter });
+console.log("🚀 Cliente de Prisma listo para conectar");

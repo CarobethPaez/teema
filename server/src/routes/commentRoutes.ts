@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { createComment, deleteComment, getTaskComments } from '../controllers/commentController';
-import { authenticateToken } from '../middleware/auth';
+import { createComment, deleteComment, getTaskComments } from '../controllers/commentController.js';
+import { authenticateToken } from '../middleware/auth.js';
 
 const router = Router();
 

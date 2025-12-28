@@ -1,28 +1,23 @@
 import express from 'express';
 import http from 'http';
-import { Server } from 'socket.io'; // Keep for type if needed, or remove if unused. Checking usage..
-// Actually, 'Server' is not used anymore in this file directly as type or value after refactor.
-// But let's check if it breaks compilation if I remove it.
-// The code `const io = initSocket(server)` returns `io` which is `Server`.
-// But we don't use `io` explicitly in `server.ts` other than initialization.
-// So safe to remove.
+import { Server } from 'socket.io'; 
 
 import cors from 'cors';
 import dotenv from 'dotenv';
 
-import { prisma } from './lib/prisma';
+import { prisma } from './lib/prisma.js';
 
-import authRoutes from './routes/authRoutes';
-import projectRoutes from './routes/projectRoutes';
-import taskRoutes from './routes/taskRoutes';
-import commentRoutes from './routes/commentRoutes';
+import authRoutes from './routes/authRoutes.js';
+import projectRoutes from './routes/projectRoutes.js';
+import taskRoutes from './routes/taskRoutes.js';
+import commentRoutes from './routes/commentRoutes.js';
 
 const authRoutes_ = authRoutes;
 const projectRoutes_ = projectRoutes;
 const taskRoutes_ = taskRoutes;
 const commentRoutes_ = commentRoutes;
 
-import { initSocket } from './lib/socket';
+import { initSocket } from './lib/socket.js';
 
 const app = express();
 const server = http.createServer(app);

@@ -5,8 +5,8 @@ import {
     getProject,
     updateProject,
     deleteProject
-} from '../controllers/projectController';
-import { authenticateToken } from '../middleware/auth';
+} from '../controllers/projectController.js';
+import { authenticateToken } from '../middleware/auth.js';
 
 const router = Router();
 
