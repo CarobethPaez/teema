@@ -1,6 +1,6 @@
 import express from 'express';
 import http from 'http';
-import { Server } from 'socket.io'; 
+import { Server } from 'socket.io';
 
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -11,11 +11,6 @@ import authRoutes from './routes/authRoutes.js';
 import projectRoutes from './routes/projectRoutes.js';
 import taskRoutes from './routes/taskRoutes.js';
 import commentRoutes from './routes/commentRoutes.js';
-
-const authRoutes_ = authRoutes;
-const projectRoutes_ = projectRoutes;
-const taskRoutes_ = taskRoutes;
-const commentRoutes_ = commentRoutes;
 
 import { initSocket } from './lib/socket.js';
 
@@ -41,10 +36,8 @@ app.get('/', async (req, res) => {
     }
 });
 
-// Socket initialization moved to lib/socket.ts
-
 const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`🚀 Server running on port ${PORT}`);
 });

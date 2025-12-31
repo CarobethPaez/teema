@@ -1,7 +1,6 @@
 import { Server as HttpServer } from 'http';
 import { Server, Socket } from 'socket.io';
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+import { prisma } from './prisma.js';
 
 let io: Server;
 
@@ -18,29 +17,29 @@ export const initSocket = (httpServer: HttpServer) => {
 
         // Escuchar creación de tareas
         // Agregamos 'async' antes de (newTask)
-    socket.on('task:create', async (taskData) => {
-    console.log('🚀 Recibido para guardar:', taskData);
+        socket.on('task:create', async (taskData) => {
+            console.log('🚀 Recibido para guardar:', taskData);
 
-    try {
-        // Guardamos físicamente en PostgreSQL
-        const savedTask = await prisma.task.create({
-            data: {
-                title: taskData.title,
-                status: taskData.status || 'todo',
-                // Si tienes un proyecto por defecto o ID de proyecto:
-                // Línea 31 - Cambia el texto genérico por el ID real
-            projectId: taskData.projectId || "612f05ad-1d9a-4a1e-8775-52151755e431"
+            try {
+                // Guardamos físicamente en PostgreSQL
+                const savedTask = await prisma.task.create({
+                    data: {
+                        title: taskData.title,
+                        status: taskData.status || 'todo',
+                        // Si tienes un proyecto por defecto o ID de proyecto:
+                        // Línea 31 - Cambia el texto genérico por el ID real
+                        projectId: taskData.projectId || "612f05ad-1d9a-4a1e-8775-52151755e431"
+                    }
+                });
+
+                console.log('💾 Tarea guardada en BD con ID:', savedTask.id);
+
+                // Emitimos la tarea YA GUARDADA (con su ID real de la BD) a todos
+                io.emit('task:received', savedTask);
+            } catch (error) {
+                console.error('❌ Error al guardar en Prisma:', error);
             }
         });
-
-        console.log('💾 Tarea guardada en BD con ID:', savedTask.id);
-
-        // Emitimos la tarea YA GUARDADA (con su ID real de la BD) a todos
-        io.emit('task:received', savedTask); 
-    } catch (error) {
-        console.error('❌ Error al guardar en Prisma:', error);
-    }
-});
 
         socket.on('join_project', (projectId: string) => {
             socket.join(`project:${projectId}`);
