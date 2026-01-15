@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { projectService, Project } from '../services/projectService';
-import { taskService, Task } from '../services/taskService';
+import { projectService } from '../services/projectService';
+import type { Project } from '../services/projectService';
+import { taskService } from '../services/taskService';
+import type { Task } from '../services/taskService';
 import { useNavigate } from 'react-router-dom';
 import TaskModal from '../components/Dashboard/TaskModal';
 import { useSocket } from '../context/SocketContext';
