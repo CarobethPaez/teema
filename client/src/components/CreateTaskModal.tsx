@@ -30,7 +30,11 @@ const CreateTaskModal = ({ project, onClose, onTaskCreated }: CreateTaskModalPro
             onTaskCreated();
             onClose();
         } catch (err: unknown) {
-            const errorMessage = err instanceof Error ? (err as any).response?.data?.message || err.message : 'Failed to create task';
+            let errorMessage = 'Failed to create task';
+            if (err instanceof Error) {
+                const axiosError = err as { response?: { data?: { message?: string } } };
+                errorMessage = axiosError.response?.data?.message || err.message;
+            }
             setError(errorMessage);
         } finally {
             setIsLoading(false);

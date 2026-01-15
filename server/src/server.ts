@@ -31,7 +31,7 @@ app.get('/', async (req, res) => {
     try {
         await prisma.$queryRaw`SELECT 1`;
         res.status(200).send('Task Management API is running and Database is connected');
-    } catch (error) {
+    } catch (_error) {
         res.status(500).send('API running but Database connection failed');
     }
 });

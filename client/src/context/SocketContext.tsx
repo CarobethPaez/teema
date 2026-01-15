@@ -18,7 +18,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
         if (isAuthenticated) {
             if (!socketRef.current) {
                 // REVISA EL PUERTO: Si tu servidor Node corre en el 4000, cámbialo aquí
-                const socketInstance = io('http://localhost:3000', {
+                const socketInstance = io(import.meta.env.VITE_API_URL || 'http://localhost:3000', {
                     reconnection: true,
                 });
 
