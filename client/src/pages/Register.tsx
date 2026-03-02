@@ -16,7 +16,8 @@ const Register = () => {
             await register({ name, email, password });
             navigate('/');
         } catch (err: unknown) {
-            const errorMessage = err instanceof Error ? (err as any).response?.data?.message || err.message : 'Registration failed';
+            const axiosError = err as { response?: { data?: { message?: string } } };
+            const errorMessage = axiosError.response?.data?.message || (err instanceof Error ? err.message : 'Registration failed');
             setError(errorMessage);
         }
     };

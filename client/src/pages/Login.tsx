@@ -15,7 +15,8 @@ const Login = () => {
             await login({ email, password });
             navigate('/');
         } catch (err: unknown) {
-            const errorMessage = err instanceof Error ? (err as any).response?.data?.message || err.message : 'Login failed';
+            const axiosError = err as { response?: { data?: { message?: string } } };
+            const errorMessage = axiosError.response?.data?.message || (err instanceof Error ? err.message : 'Login failed');
             setError(errorMessage);
         }
     };

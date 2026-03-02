@@ -1,10 +1,5 @@
 import express from 'express';
 import http from 'http';
-import { Server } from 'socket.io';
-
-import cors from 'cors';
-import dotenv from 'dotenv';
-
 import { prisma } from './lib/prisma.js';
 
 import authRoutes from './routes/authRoutes.js';
@@ -31,7 +26,7 @@ app.get('/', async (req, res) => {
     try {
         await prisma.$queryRaw`SELECT 1`;
         res.status(200).send('Task Management API is running and Database is connected');
-    } catch (_error) {
+    } catch (error) {
         res.status(500).send('API running but Database connection failed');
     }
 });

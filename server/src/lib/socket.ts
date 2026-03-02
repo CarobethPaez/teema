@@ -1,5 +1,5 @@
 import { Server as HttpServer } from 'http';
-import { Server, Socket } from 'socket.io';
+import { Server } from 'socket.io';
 import { prisma } from './prisma.js';
 
 let io: Server;
@@ -26,9 +26,7 @@ export const initSocket = (httpServer: HttpServer) => {
                     data: {
                         title: taskData.title,
                         status: taskData.status || 'todo',
-                        // Si tienes un proyecto por defecto o ID de proyecto:
-                        // Línea 31 - Cambia el texto genérico por el ID real
-                        projectId: taskData.projectId || "612f05ad-1d9a-4a1e-8775-52151755e431"
+                        projectId: taskData.projectId
                     }
                 });
 

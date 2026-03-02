@@ -92,7 +92,7 @@ export const getMe = async (req: Request, res: Response): Promise<any> => {
             name: user.name,
             avatar: user.avatar
         });
-    } catch (_error) {
+    } catch (error) {
         return res.status(500).json({ message: 'Internal server error' });
     }
 };
