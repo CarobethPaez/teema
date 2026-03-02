@@ -1,5 +1,5 @@
 import { Server as HttpServer } from 'http';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { prisma } from './prisma.js';
 
 let io: Server;
