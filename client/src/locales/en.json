@@ -1,0 +1,65 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "actions": "Actions",
+    "logout": "Logout",
+    "welcome": "Welcome",
+    "back_to_dashboard": "Back to Dashboard"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "no_account": "Don't have an account?",
+    "have_account": "Already have an account?",
+    "login_failed": "Login failed",
+    "registration_failed": "Registration failed"
+  },
+  "dashboard": {
+    "title": "Teema Dashboard",
+    "new_task": "New Task",
+    "new_project": "New Project",
+    "my_projects": "My Projects",
+    "recent_activity": "Recent Activity",
+    "no_projects": "You don't have any projects yet.",
+    "create_first_project": "Create my first project",
+    "no_tasks": "No tasks registered.",
+    "stats": {
+      "total": "Total",
+      "pending": "Pending",
+      "completed": "Completed"
+    },
+    "project_card": {
+      "tasks": "Tasks",
+      "members": "Members",
+      "no_description": "No description"
+    }
+  },
+  "projects": {
+    "create_title": "Create New Project",
+    "name": "Project Name",
+    "description": "Description",
+    "create_button": "Create Project",
+    "error_create": "Error creating project. Please try again.",
+    "details": {
+      "team": "Team",
+      "owner": "Owner",
+      "no_tasks": "No tasks yet",
+      "settings": "Settings"
+    }
+  },
+  "tasks": {
+    "title": "Tasks",
+    "add_task": "Add Task",
+    "error_load": "Error loading data. Make sure the server is running.",
+    "error_create": "Error creating task. Try again.",
+    "first_project_alert": "Please create a project first before adding tasks."
+  }
+}
