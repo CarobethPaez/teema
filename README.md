@@ -76,14 +76,28 @@ npm run dev
 
 Access the application at `http://localhost:5173`.
 
+## Environment Variables
+
+The project requires a `.env` file in the root directory (or inside the `server/` folder) with the following variables:
+
+```env
+DATABASE_URL="postgresql://postgres:postgrespassword@localhost:5433/taskmanager?schema=public"
+PORT=3000
+JWT_SECRET=your_jwt_secret_key
+```
+
 ## Features
 
-- **Authentication**: Secure Register and Login with JWT. Protected routes ensure data privacy.
+- **Dashboard**: Centralized overview of all projects with:
+    - **Live Statistics**: Real-time count of Total, Pending, and Completed tasks.
+    - **Recent Activity**: Stream of the latest task updates across all projects.
 - **Projects**: Create and manage multiple projects. View project teams and stats.
 - **Tasks**: Full CRUD for tasks within projects. Assign tasks to members and update status (Todo, In Progress, Done).
-- **Real-time Updates**: Changes to tasks (creation, updates, deletion) are reflected instantly for all users viewing the project.
+- **Real-time Updates**: Changes to tasks (creation, updates, deletion) are reflected instantly for all users viewing the project via Socket.io.
 - **Comments**: Real-time discussion on tasks. Users can add and delete their own comments.
-- **Dashboard**: Overview of all your projects.
+
+> [!NOTE]
+> The application currently features a multilingual interface with core components in English and various dashboard labels in Spanish.
 
 ## Project Structure
 
