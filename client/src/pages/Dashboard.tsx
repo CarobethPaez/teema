@@ -15,7 +15,6 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
 
   const [projects, setProjects] = useState<Project[]>([]);
-  const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,8 +25,6 @@ const Dashboard: React.FC = () => {
       setError(null);
       const data = await projectService.getAll();
       setProjects(data);
-      const allTasks = data.flatMap(p => p.tasks || []);
-      setTasks(allTasks);
     } catch (err) {
       console.error('Failed to fetch dashboard data', err);
       setError('Error al cargar datos. Asegúrate de que el servidor esté corriendo.');
@@ -44,15 +41,21 @@ const Dashboard: React.FC = () => {
     if (!socket) return;
 
     const handleTaskCreated = (newTask: Task) => {
-      setTasks(prev => [newTask, ...prev]);
+      setProjects(prev => prev.map(p => p.id === newTask.projectId ? { ...p, tasks: [newTask, ...(p.tasks || [])] } : p));
     };
 
     const handleTaskUpdated = (updatedTask: Task) => {
-      setTasks(prev => prev.map(t => t.id === updatedTask.id ? updatedTask : t));
+      setProjects(prev => prev.map(p => p.id === updatedTask.projectId ? {
+        ...p,
+        tasks: (p.tasks || []).map(t => t.id === updatedTask.id ? updatedTask : t)
+      } : p));
     };
 
-    const handleTaskDeleted = ({ id }: { id: string }) => {
-      setTasks(prev => prev.filter(t => t.id !== id));
+    const handleTaskDeleted = ({ id, projectId }: { id: string; projectId: string }) => {
+      setProjects(prev => prev.map(p => p.id === projectId ? {
+        ...p,
+        tasks: (p.tasks || []).filter(t => t.id !== id)
+      } : p));
     };
 
     socket.on('task:created', handleTaskCreated);
@@ -65,6 +68,8 @@ const Dashboard: React.FC = () => {
       socket.off('task:deleted', handleTaskDeleted);
     };
   }, [socket]);
+
+  const tasks = useMemo(() => projects.flatMap(p => p.tasks || []), [projects]);
 
   const stats = useMemo(() => ({
     total: tasks.length,
@@ -84,14 +89,11 @@ const Dashboard: React.FC = () => {
         ...taskData,
         projectId: projects[0].id
       });
-      // La actualización de la UI se manejará vía socket si el servidor emite,
-      // o manualmente aquí si queremos feedback instantáneo sin socket.
-      // Como ya tenemos el listener, si el servidor emite 'task:created', no necesitamos setearlo aquí.
-      // Pero para mayor seguridad en caso de que el socket falle:
-      setTasks(prev => {
-        if (prev.find(t => t.id === newTask.id)) return prev;
-        return [newTask, ...prev];
-      });
+      // UI will likely be updated via socket, but we can manually update projects state for instant feedback
+      setProjects(prev => prev.map(p => p.id === newTask.projectId ? {
+        ...p,
+        tasks: [newTask, ...(p.tasks || []).filter(t => t.id !== newTask.id)]
+      } : p));
     } catch (err) {
       console.error('Failed to add task', err);
       alert('Error al crear la tarea. Intenta de nuevo.');
