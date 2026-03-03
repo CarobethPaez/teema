@@ -14,7 +14,7 @@ import { initSocket } from './lib/socket.js';
 
 const app = express();
 const server = http.createServer(app);
-const io = initSocket(server);
+initSocket(server);
 
 app.use(cors());
 app.use(express.json());
@@ -29,7 +29,7 @@ app.get('/', async (req, res) => {
     try {
         await prisma.$queryRaw`SELECT 1`;
         res.status(200).send('Task Management API is running and Database is connected');
-    } catch (error) {
+    } catch {
         res.status(500).send('API running but Database connection failed');
     }
 });
