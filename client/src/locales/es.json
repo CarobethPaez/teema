@@ -23,8 +23,8 @@
         "registration_failed": "Error al registrarse"
     },
     "dashboard": {
-        "title": "Teema Dashboard",
-        "new_task": "Nueva Tarea",
+        "title": "Mi Task Manager (Active)",
+        "new_task": "+ Nueva Tarea",
         "new_project": "Nuevo Proyecto",
         "my_projects": "Mis Proyectos",
         "recent_activity": "Actividad Reciente",
