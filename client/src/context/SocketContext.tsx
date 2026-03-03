@@ -55,6 +55,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 // Este es el hook que usaremos en el Dashboard
+// eslint-disable-next-line react-refresh/only-export-components
 export const useSocket = () => {
     const context = useContext(SocketContext);
     if (!context) {
