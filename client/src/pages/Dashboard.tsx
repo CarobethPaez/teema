@@ -8,11 +8,14 @@ import { useNavigate } from 'react-router-dom';
 import TaskModal from '../components/Dashboard/TaskModal';
 import { useSocket } from '../context/SocketContext';
 import styles from '../components/Dashboard/Dashboard.module.css';
+import LanguageSwitcher from '../components/LanguageSwitcher';
+import { useTranslation } from 'react-i18next';
 
 const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
   const { socket } = useSocket();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -27,7 +30,7 @@ const Dashboard: React.FC = () => {
       if (isMounted) setProjects(data);
     } catch (err) {
       console.error('Failed to fetch dashboard data', err);
-      if (isMounted) setError('Error al cargar datos. Asegúrate de que el servidor esté corriendo.');
+      if (isMounted) setError(t('tasks.error_load'));
     } finally {
       if (isMounted) setIsLoading(false);
     }
@@ -82,7 +85,7 @@ const Dashboard: React.FC = () => {
 
   const handleAddTask = async (taskData: { title: string; status: 'todo' | 'in-progress' | 'done' }) => {
     if (projects.length === 0) {
-      alert('Por favor, crea un proyecto primero antes de agregar tareas.');
+      alert(t('tasks.first_project_alert'));
       return;
     }
 
@@ -98,40 +101,41 @@ const Dashboard: React.FC = () => {
       } : p));
     } catch (err) {
       console.error('Failed to add task', err);
-      alert('Error al crear la tarea. Intenta de nuevo.');
+      alert(t('tasks.error_create'));
     }
   };
 
-  if (isLoading) return <div className={styles.container}><div className={styles.emptyState}>Cargando...</div></div>;
+  if (isLoading) return <div className={styles.container}><div className={styles.emptyState}>{t('common.loading')}</div></div>;
 
   return (
     <div className={styles.container}>
       <header className={styles.header}>
         <div>
-          <h1>Teema Dashboard</h1>
-          <p>Bienvenido, <strong>{user?.name}</strong></p>
+          <h1>{t('dashboard.title')}</h1>
+          <p>{t('common.welcome')}, <strong>{user?.name}</strong></p>
         </div>
-        <div style={{ display: 'flex', gap: '1rem' }}>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <LanguageSwitcher />
           <button className={styles.addButton} onClick={() => setIsModalOpen(true)}>
-            + Nueva Tarea
+            {t('dashboard.new_task')}
           </button>
-          <button onClick={logout} className={styles.cancelBtn}>Salir</button>
+          <button onClick={logout} className={styles.cancelBtn}>{t('common.logout')}</button>
         </div>
       </header>
 
       {error && <div style={{ color: 'red', marginBottom: '1rem' }}>{error}</div>}
 
       <section className={styles.statsGrid}>
-        <div className={styles.statCard}><h3>Total</h3><p>{stats.total}</p></div>
-        <div className={`${styles.statCard} ${styles.pending}`}><h3>Pendientes</h3><p>{stats.todo}</p></div>
-        <div className={`${styles.statCard} ${styles.completed}`}><h3>Completadas</h3><p>{stats.done}</p></div>
+        <div className={styles.statCard}><h3>{t('dashboard.stats.total')}</h3><p>{stats.total}</p></div>
+        <div className={`${styles.statCard} ${styles.pending}`}><h3>{t('dashboard.stats.pending')}</h3><p>{stats.todo}</p></div>
+        <div className={`${styles.statCard} ${styles.completed}`}><h3>{t('dashboard.stats.completed')}</h3><p>{stats.done}</p></div>
       </section>
 
       <main className={styles.mainContent}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-          <h2>Mis Proyectos</h2>
+          <h2>{t('dashboard.my_projects')}</h2>
           <button className={styles.addButton} style={{ padding: '0.5rem 1rem', fontSize: '0.9rem' }} onClick={() => navigate('/projects/new')}>
-            + Nuevo Proyecto
+            {t('dashboard.new_project')}
           </button>
         </div>
 
@@ -140,24 +144,24 @@ const Dashboard: React.FC = () => {
             {projects.map(project => (
               <div key={project.id} className={styles.statCard} style={{ cursor: 'pointer', textAlign: 'left' }} onClick={() => navigate(`/projects/${project.id}`)}>
                 <h3 style={{ fontSize: '1.2rem', color: '#1a1a1a', marginBottom: '0.5rem' }}>{project.name}</h3>
-                <p style={{ color: '#666', fontSize: '0.9rem', marginBottom: '1rem', fontWeight: 'normal' }}>{project.description || 'Sin descripción'}</p>
+                <p style={{ color: '#666', fontSize: '0.9rem', marginBottom: '1rem', fontWeight: 'normal' }}>{project.description || t('dashboard.project_card.no_description')}</p>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: '#888', borderTop: '1px solid #eee', paddingTop: '1rem' }}>
-                  <span>{project._count?.tasks || 0} Tareas</span>
-                  <span>{project._count?.members || 0} Miembros</span>
+                  <span>{project._count?.tasks || 0} {t('dashboard.project_card.tasks')}</span>
+                  <span>{project._count?.members || 0} {t('dashboard.project_card.members')}</span>
                 </div>
               </div>
             ))}
           </div>
         ) : (
           <div className={styles.emptyState} style={{ marginBottom: '3rem' }}>
-            <p>No tienes proyectos aún.</p>
+            <p>{t('dashboard.no_projects')}</p>
             <button className={styles.addButton} style={{ marginTop: '1rem' }} onClick={() => navigate('/projects/new')}>
-              Crear mi primer proyecto
+              {t('dashboard.create_first_project')}
             </button>
           </div>
         )}
 
-        <h2>Actividad Reciente</h2>
+        <h2>{t('dashboard.recent_activity')}</h2>
         <ul className={styles.taskList}>
           {tasks.length > 0 ? tasks.slice(0, 5).map(task => (
             <li key={task.id} className={styles.taskItem}>
@@ -169,7 +173,7 @@ const Dashboard: React.FC = () => {
             </li>
           )) : (
             <div className={styles.emptyState} style={{ padding: '1.5rem' }}>
-              <p>No hay tareas registradas.</p>
+              <p>{t('dashboard.no_tasks')}</p>
             </div>
           )}
         </ul>

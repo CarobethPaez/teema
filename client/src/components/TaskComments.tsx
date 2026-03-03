@@ -4,6 +4,7 @@ import type { Comment } from '../services/commentService';
 import { useAuth } from '../context/AuthContext';
 import { useSocket } from '../context/SocketContext';
 import { Trash2, Send } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface TaskCommentsProps {
     taskId: string;
@@ -15,6 +16,7 @@ const TaskComments = ({ taskId }: TaskCommentsProps) => {
     const [isLoading, setIsLoading] = useState(true);
     const { user } = useAuth();
     const { socket } = useSocket();
+    const { t } = useTranslation();
 
     useEffect(() => {
         const fetchComments = async () => {
@@ -68,7 +70,7 @@ const TaskComments = ({ taskId }: TaskCommentsProps) => {
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm('Delete comment?')) return;
+        if (!confirm(t('tasks.comments.delete_confirm'))) return;
         try {
             await commentService.delete(id);
         } catch (error) {
@@ -76,15 +78,15 @@ const TaskComments = ({ taskId }: TaskCommentsProps) => {
         }
     };
 
-    if (isLoading) return <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Loading comments...</div>;
+    if (isLoading) return <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{t('tasks.comments.loading')}</div>;
 
     return (
         <div style={{ marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
-            <h5 style={{ marginBottom: '0.5rem', fontSize: '0.9rem' }}>Comments</h5>
+            <h5 style={{ marginBottom: '0.5rem', fontSize: '0.9rem' }}>{t('tasks.comments.title')}</h5>
 
             <div style={{ maxHeight: '200px', overflowY: 'auto', marginBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
                 {comments.length === 0 ? (
-                    <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontStyle: 'italic' }}>No comments yet.</p>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontStyle: 'italic' }}>{t('tasks.comments.no_comments')}</p>
                 ) : (
                     comments.map(comment => (
                         <div key={comment.id} style={{ display: 'flex', gap: '0.5rem' }}>
@@ -128,7 +130,7 @@ const TaskComments = ({ taskId }: TaskCommentsProps) => {
                     type="text"
                     className="input"
                     style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}
-                    placeholder="Write a comment..."
+                    placeholder={t('tasks.comments.placeholder')}
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                 />

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -8,6 +9,7 @@ const Login = () => {
     const [error, setError] = useState('');
     const { login } = useAuth();
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -16,7 +18,7 @@ const Login = () => {
             navigate('/');
         } catch (err: unknown) {
             const axiosError = err as { response?: { data?: { message?: string } } };
-            const errorMessage = axiosError.response?.data?.message || (err instanceof Error ? err.message : 'Login failed');
+            const errorMessage = axiosError.response?.data?.message || (err instanceof Error ? err.message : t('auth.login_failed'));
             setError(errorMessage);
         }
     };
@@ -24,11 +26,11 @@ const Login = () => {
     return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
             <div className="card" style={{ padding: '2rem', width: '100%', maxWidth: '400px', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius)' }}>
-                <h2 style={{ marginBottom: '1.5rem', textAlign: 'center' }}>Login</h2>
+                <h2 style={{ marginBottom: '1.5rem', textAlign: 'center' }}>{t('auth.login')}</h2>
                 {error && <div style={{ color: 'var(--error)', marginBottom: '1rem', textAlign: 'center' }}>{error}</div>}
                 <form onSubmit={handleSubmit}>
                     <div style={{ marginBottom: '1rem' }}>
-                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Email</label>
+                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>{t('auth.email')}</label>
                         <input
                             type="email"
                             className="input"
@@ -38,7 +40,7 @@ const Login = () => {
                         />
                     </div>
                     <div style={{ marginBottom: '1.5rem' }}>
-                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Password</label>
+                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>{t('auth.password')}</label>
                         <input
                             type="password"
                             className="input"
@@ -47,10 +49,10 @@ const Login = () => {
                             required
                         />
                     </div>
-                    <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>Login</button>
+                    <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>{t('auth.login')}</button>
                 </form>
                 <div style={{ marginTop: '1rem', textAlign: 'center', fontSize: '0.9rem' }}>
-                    Don't have an account? <Link to="/register" style={{ color: 'var(--primary)' }}>Register</Link>
+                    {t('auth.no_account')} <Link to="/register" style={{ color: 'var(--primary)' }}>{t('auth.register')}</Link>
                 </div>
             </div>
         </div>

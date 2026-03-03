@@ -2,6 +2,7 @@ import { taskService } from '../services/taskService';
 import type { Task } from '../services/taskService';
 import { Trash2, MessageSquare } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import TaskComments from './TaskComments';
 
 interface TaskCardProps {
@@ -11,6 +12,7 @@ interface TaskCardProps {
 
 const TaskCard = ({ task, onTaskUpdated }: TaskCardProps) => {
     const [showComments, setShowComments] = useState(false);
+    const { t } = useTranslation();
 
     const handleStatusChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
         try {
@@ -22,7 +24,7 @@ const TaskCard = ({ task, onTaskUpdated }: TaskCardProps) => {
     };
 
     const handleDelete = async () => {
-        if (!confirm('Are you sure you want to delete this task?')) return;
+        if (!confirm(t('tasks.delete_confirm'))) return;
         try {
             await taskService.delete(task.id);
             onTaskUpdated();
@@ -50,7 +52,7 @@ const TaskCard = ({ task, onTaskUpdated }: TaskCardProps) => {
                 <button
                     onClick={handleDelete}
                     style={{ color: 'var(--error)', opacity: 0.7, padding: '0.2rem' }}
-                    title="Delete task"
+                    title={t('common.delete')}
                 >
                     <Trash2 size={16} />
                 </button>
@@ -79,7 +81,7 @@ const TaskCard = ({ task, onTaskUpdated }: TaskCardProps) => {
                                 {task.assignee.name.charAt(0).toUpperCase()}
                             </div>
                         ) : (
-                            <span style={{ color: 'var(--text-secondary)' }}>Unassigned</span>
+                            <span style={{ color: 'var(--text-secondary)' }}>{t('tasks.unassigned')}</span>
                         )}
                     </div>
 
@@ -88,7 +90,7 @@ const TaskCard = ({ task, onTaskUpdated }: TaskCardProps) => {
                         style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', color: 'var(--text-secondary)' }}
                     >
                         <MessageSquare size={14} />
-                        <span>Comments</span>
+                        <span>{t('tasks.comments.title')}</span>
                     </button>
                 </div>
 
@@ -104,9 +106,9 @@ const TaskCard = ({ task, onTaskUpdated }: TaskCardProps) => {
                         fontSize: '0.8rem'
                     }}
                 >
-                    <option value="todo">To Do</option>
-                    <option value="in-progress">In Progress</option>
-                    <option value="done">Done</option>
+                    <option value="todo">{t('tasks.status.todo')}</option>
+                    <option value="in-progress">{t('tasks.status.in_progress')}</option>
+                    <option value="done">{t('tasks.status.done')}</option>
                 </select>
             </div>
 

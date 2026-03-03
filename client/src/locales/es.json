@@ -52,14 +52,35 @@
             "team": "Equipo",
             "owner": "Dueño",
             "no_tasks": "No hay tareas aún",
-            "settings": "Configuración"
+            "settings": "Configuración",
+            "loading": "Cargando proyecto..."
         }
     },
     "tasks": {
         "title": "Tareas",
         "add_task": "Agregar Tarea",
+        "new_task": "Nueva Tarea",
+        "title_label": "Título",
+        "description_label": "Descripción",
+        "assign_to": "Asignar a",
+        "unassigned": "Sin asignar",
+        "create_task": "Crear Tarea",
         "error_load": "Error al cargar datos. Asegúrate de que el servidor esté corriendo.",
         "error_create": "Error al crear la tarea. Intenta de nuevo.",
-        "first_project_alert": "Por favor, crea un proyecto primero antes de agregar tareas."
+        "first_project_alert": "Por favor, crea un proyecto primero antes de agregar tareas.",
+        "delete_confirm": "¿Estás seguro de que quieres eliminar esta tarea?",
+        "status": {
+            "todo": "Pendiente",
+            "in_progress": "En Progreso",
+            "done": "Completado"
+        },
+        "comments": {
+            "title": "Comentarios",
+            "no_comments": "Aún no hay comentarios.",
+            "placeholder": "Escribe un comentario...",
+            "delete_confirm": "¿Eliminar comentario?",
+            "loading": "Cargando comentarios..."
+        },
+        "placeholder_title": "¿Qué hay que hacer?"
     }
 }

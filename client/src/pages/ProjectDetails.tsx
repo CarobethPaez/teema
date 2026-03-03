@@ -6,6 +6,7 @@ import TaskCard from '../components/TaskCard';
 import CreateTaskModal from '../components/CreateTaskModal';
 import { useSocket } from '../context/SocketContext';
 import type { Task } from '../services/taskService';
+import { useTranslation } from 'react-i18next';
 
 const ProjectDetails = () => {
     const { id } = useParams<{ id: string }>();
@@ -15,6 +16,7 @@ const ProjectDetails = () => {
     const [error, setError] = useState('');
     const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
     const { socket } = useSocket();
+    const { t } = useTranslation();
 
     const fetchProject = useCallback(async () => {
         if (!id) return;
@@ -23,7 +25,7 @@ const ProjectDetails = () => {
             setProject(data);
         } catch (err: unknown) {
             console.error('Failed to fetch project', err);
-            setError('Failed to load project');
+            setError(t('projects.details.loading'));
             setTimeout(() => navigate('/'), 3000);
         } finally {
             setIsLoading(false);
@@ -70,7 +72,7 @@ const ProjectDetails = () => {
         };
     }, [socket, id]);
 
-    if (isLoading) return <div className="container" style={{ paddingTop: '2rem' }}>Loading project...</div>;
+    if (isLoading) return <div className="container" style={{ paddingTop: '2rem' }}>{t('projects.details.loading')}</div>;
     if (error) return <div className="container" style={{ paddingTop: '2rem', color: 'var(--error)' }}>{error}</div>;
     if (!project) return null;
 
@@ -82,7 +84,7 @@ const ProjectDetails = () => {
                     onClick={() => navigate('/')}
                     style={{ marginBottom: '1rem', paddingLeft: 0, color: 'var(--text-secondary)' }}
                 >
-                    &larr; Back to Dashboard
+                    &larr; {t('common.back_to_dashboard')}
                 </button>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                     <div>
@@ -94,9 +96,9 @@ const ProjectDetails = () => {
                             className="btn btn-primary"
                             onClick={() => setIsTaskModalOpen(true)}
                         >
-                            + New Task
+                            {t('tasks.new_task')}
                         </button>
-                        <button className="btn" style={{ border: '1px solid var(--border)' }}>Settings</button>
+                        <button className="btn" style={{ border: '1px solid var(--border)' }}>{t('projects.details.settings')}</button>
                     </div>
                 </div>
             </div>
@@ -105,7 +107,7 @@ const ProjectDetails = () => {
                 {/* Tasks Column */}
                 <div>
                     <div className="card" style={{ padding: '1.5rem', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius)', minHeight: '200px' }}>
-                        <h3 style={{ marginBottom: '1rem' }}>Tasks</h3>
+                        <h3 style={{ marginBottom: '1rem' }}>{t('tasks.title')}</h3>
                         {project.tasks && project.tasks.length > 0 ? (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                                 {project.tasks.map(task => (
@@ -117,7 +119,7 @@ const ProjectDetails = () => {
                                 ))}
                             </div>
                         ) : (
-                            <p style={{ color: 'var(--text-secondary)', textAlign: 'center', padding: '2rem' }}>No tasks yet</p>
+                            <p style={{ color: 'var(--text-secondary)', textAlign: 'center', padding: '2rem' }}>{t('projects.details.no_tasks')}</p>
                         )}
                     </div>
                 </div>
@@ -125,7 +127,7 @@ const ProjectDetails = () => {
                 {/* Team Column */}
                 <div>
                     <div className="card" style={{ padding: '1.5rem', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius)' }}>
-                        <h3 style={{ marginBottom: '1rem' }}>Team</h3>
+                        <h3 style={{ marginBottom: '1rem' }}>{t('projects.details.team')}</h3>
                         <ul style={{ listStyle: 'none' }}>
                             {project.members?.map(member => (
                                 <li key={member.id} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
@@ -133,7 +135,7 @@ const ProjectDetails = () => {
                                         {member.name.charAt(0).toUpperCase()}
                                     </div>
                                     <span>{member.name}</span>
-                                    {member.id === project.ownerId && <span style={{ fontSize: '0.7rem', backgroundColor: 'var(--surface-hover)', padding: '0.2rem 0.5rem', borderRadius: '1rem' }}>Owner</span>}
+                                    {member.id === project.ownerId && <span style={{ fontSize: '0.7rem', backgroundColor: 'var(--surface-hover)', padding: '0.2rem 0.5rem', borderRadius: '1rem' }}>{t('projects.details.owner')}</span>}
                                 </li>
                             ))}
                         </ul>

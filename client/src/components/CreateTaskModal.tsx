@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { taskService } from '../services/taskService';
 import type { Project } from '../services/projectService';
+import { useTranslation } from 'react-i18next';
 
 interface CreateTaskModalProps {
     project: Project;
@@ -14,6 +15,7 @@ const CreateTaskModal = ({ project, onClose, onTaskCreated }: CreateTaskModalPro
     const [assigneeId, setAssigneeId] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const { t } = useTranslation();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -30,7 +32,7 @@ const CreateTaskModal = ({ project, onClose, onTaskCreated }: CreateTaskModalPro
             onTaskCreated();
             onClose();
         } catch (err: unknown) {
-            let errorMessage = 'Failed to create task';
+            let errorMessage = t('tasks.error_create');
             if (err instanceof Error) {
                 const axiosError = err as { response?: { data?: { message?: string } } };
                 errorMessage = axiosError.response?.data?.message || err.message;
@@ -61,12 +63,12 @@ const CreateTaskModal = ({ project, onClose, onTaskCreated }: CreateTaskModalPro
                 padding: '2rem',
                 borderRadius: 'var(--radius)'
             }}>
-                <h2 style={{ marginBottom: '1.5rem' }}>New Task</h2>
+                <h2 style={{ marginBottom: '1.5rem' }}>{t('tasks.new_task')}</h2>
                 {error && <div style={{ color: 'var(--error)', marginBottom: '1rem' }}>{error}</div>}
 
                 <form onSubmit={handleSubmit}>
                     <div style={{ marginBottom: '1rem' }}>
-                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Title</label>
+                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>{t('tasks.title_label')}</label>
                         <input
                             type="text"
                             className="input"
@@ -78,7 +80,7 @@ const CreateTaskModal = ({ project, onClose, onTaskCreated }: CreateTaskModalPro
                     </div>
 
                     <div style={{ marginBottom: '1rem' }}>
-                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Description</label>
+                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>{t('tasks.description_label')}</label>
                         <textarea
                             className="input"
                             value={description}
@@ -90,13 +92,13 @@ const CreateTaskModal = ({ project, onClose, onTaskCreated }: CreateTaskModalPro
                     </div>
 
                     <div style={{ marginBottom: '1.5rem' }}>
-                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Assign To</label>
+                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>{t('tasks.assign_to')}</label>
                         <select
                             className="input"
                             value={assigneeId}
                             onChange={(e) => setAssigneeId(e.target.value)}
                         >
-                            <option value="">Unassigned</option>
+                            <option value="">{t('tasks.unassigned')}</option>
                             {project.members?.map(member => (
                                 <option key={member.id} value={member.id}>
                                     {member.name}
@@ -112,14 +114,14 @@ const CreateTaskModal = ({ project, onClose, onTaskCreated }: CreateTaskModalPro
                             onClick={onClose}
                             style={{ border: '1px solid var(--border)' }}
                         >
-                            Cancel
+                            {t('common.cancel')}
                         </button>
                         <button
                             type="submit"
                             className="btn btn-primary"
                             disabled={isLoading}
                         >
-                            {isLoading ? 'Creating...' : 'Create Task'}
+                            {isLoading ? t('common.loading') : t('tasks.create_task')}
                         </button>
                     </div>
                 </form>

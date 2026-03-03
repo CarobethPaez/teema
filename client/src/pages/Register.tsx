@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const Register = () => {
     const [name, setName] = useState('');
@@ -9,6 +10,7 @@ const Register = () => {
     const [error, setError] = useState('');
     const { register } = useAuth();
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -17,7 +19,7 @@ const Register = () => {
             navigate('/');
         } catch (err: unknown) {
             const axiosError = err as { response?: { data?: { message?: string } } };
-            const errorMessage = axiosError.response?.data?.message || (err instanceof Error ? err.message : 'Registration failed');
+            const errorMessage = axiosError.response?.data?.message || (err instanceof Error ? err.message : t('auth.registration_failed'));
             setError(errorMessage);
         }
     };
@@ -25,11 +27,11 @@ const Register = () => {
     return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
             <div className="card" style={{ padding: '2rem', width: '100%', maxWidth: '400px', backgroundColor: 'var(--surface)', borderRadius: 'var(--radius)' }}>
-                <h2 style={{ marginBottom: '1.5rem', textAlign: 'center' }}>Register</h2>
+                <h2 style={{ marginBottom: '1.5rem', textAlign: 'center' }}>{t('auth.register')}</h2>
                 {error && <div style={{ color: 'var(--error)', marginBottom: '1rem', textAlign: 'center' }}>{error}</div>}
                 <form onSubmit={handleSubmit}>
                     <div style={{ marginBottom: '1rem' }}>
-                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Name</label>
+                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>{t('auth.name')}</label>
                         <input
                             type="text"
                             className="input"
@@ -39,7 +41,7 @@ const Register = () => {
                         />
                     </div>
                     <div style={{ marginBottom: '1rem' }}>
-                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Email</label>
+                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>{t('auth.email')}</label>
                         <input
                             type="email"
                             className="input"
@@ -49,7 +51,7 @@ const Register = () => {
                         />
                     </div>
                     <div style={{ marginBottom: '1.5rem' }}>
-                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Password</label>
+                        <label style={{ display: 'block', marginBottom: '0.5rem' }}>{t('auth.password')}</label>
                         <input
                             type="password"
                             className="input"
@@ -58,10 +60,10 @@ const Register = () => {
                             required
                         />
                     </div>
-                    <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>Register</button>
+                    <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>{t('auth.register')}</button>
                 </form>
                 <div style={{ marginTop: '1rem', textAlign: 'center', fontSize: '0.9rem' }}>
-                    Already have an account? <Link to="/login" style={{ color: 'var(--primary)' }}>Login</Link>
+                    {t('auth.have_account')} <Link to="/login" style={{ color: 'var(--primary)' }}>{t('auth.login')}</Link>
                 </div>
             </div>
         </div>
