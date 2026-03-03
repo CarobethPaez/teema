@@ -19,22 +19,24 @@ const Dashboard: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchData = async () => {
+  const fetchData = async (isMounted: boolean) => {
     try {
       setIsLoading(true);
       setError(null);
       const data = await projectService.getAll();
-      setProjects(data);
+      if (isMounted) setProjects(data);
     } catch (err) {
       console.error('Failed to fetch dashboard data', err);
-      setError('Error al cargar datos. Asegúrate de que el servidor esté corriendo.');
+      if (isMounted) setError('Error al cargar datos. Asegúrate de que el servidor esté corriendo.');
     } finally {
-      setIsLoading(false);
+      if (isMounted) setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchData();
+    let isMounted = true;
+    fetchData(isMounted);
+    return () => { isMounted = false; };
   }, []);
 
   useEffect(() => {
