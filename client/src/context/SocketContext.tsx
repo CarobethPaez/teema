@@ -25,10 +25,10 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
                 socketInstance.on('connect', () => {
                     console.log('✅ Socket conectado:', socketInstance.id);
+                    setSocket(socketInstance);
                 });
 
                 socketRef.current = socketInstance;
-                setSocket(socketInstance);
             }
 
             return () => {
@@ -56,7 +56,6 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 // Este es el hook que usaremos en el Dashboard
-// eslint-disable-next-line react-refresh/only-export-components
 export const useSocket = () => {
     const context = useContext(SocketContext);
     if (!context) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { projectService } from '../services/projectService';
 import type { Project } from '../services/projectService';
@@ -22,7 +22,7 @@ const Dashboard: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchData = async (isMounted: boolean) => {
+  const fetchData = useCallback(async (isMounted: boolean) => {
     try {
       setIsLoading(true);
       setError(null);
@@ -34,13 +34,13 @@ const Dashboard: React.FC = () => {
     } finally {
       if (isMounted) setIsLoading(false);
     }
-  };
+  }, [t]);
 
   useEffect(() => {
     let isMounted = true;
     fetchData(isMounted);
     return () => { isMounted = false; };
-  }, []);
+  }, [fetchData]);
 
   useEffect(() => {
     if (!socket) return;

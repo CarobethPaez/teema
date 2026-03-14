@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { prisma } from '../lib/prisma.js';
 
-export const register = async (req: Request, res: Response): Promise<any> => {
+export const register = async (req: Request, res: Response): Promise<Response> => {
     try {
         const { email, password, name } = req.body;
 
@@ -42,7 +42,7 @@ export const register = async (req: Request, res: Response): Promise<any> => {
     }
 };
 
-export const login = async (req: Request, res: Response): Promise<any> => {
+export const login = async (req: Request, res: Response): Promise<Response> => {
     try {
         const { email, password } = req.body;
 
@@ -77,9 +77,9 @@ export const login = async (req: Request, res: Response): Promise<any> => {
     }
 };
 
-export const getMe = async (req: Request, res: Response): Promise<any> => {
+export const getMe = async (req: Request, res: Response): Promise<Response> => {
     try {
-        const userId = (req as any).user.id;
+        const userId = (req as Request & { user: { id: string } }).user.id;
         const user = await prisma.user.findUnique({ where: { id: userId } });
 
         if (!user) {

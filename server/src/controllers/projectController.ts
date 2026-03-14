@@ -2,10 +2,10 @@ import { Request, Response } from 'express';
 import { prisma } from '../lib/prisma.js';
 
 interface AuthRequest extends Request {
-    user?: any;
+    user?: { id: string };
 }
 
-export const createProject = async (req: AuthRequest, res: Response): Promise<any> => {
+export const createProject = async (req: AuthRequest, res: Response): Promise<Response> => {
     try {
         const { name, description } = req.body;
         const userId = req.user.id;
@@ -32,7 +32,7 @@ export const createProject = async (req: AuthRequest, res: Response): Promise<an
     }
 };
 
-export const getProjects = async (req: AuthRequest, res: Response): Promise<any> => {
+export const getProjects = async (req: AuthRequest, res: Response): Promise<Response> => {
     try {
         const userId = req.user.id;
 
@@ -61,7 +61,7 @@ export const getProjects = async (req: AuthRequest, res: Response): Promise<any>
     }
 };
 
-export const getProject = async (req: AuthRequest, res: Response): Promise<any> => {
+export const getProject = async (req: AuthRequest, res: Response): Promise<Response> => {
     try {
         const userId = req.user.id;
         const { id } = req.params;
@@ -96,7 +96,7 @@ export const getProject = async (req: AuthRequest, res: Response): Promise<any> 
     }
 };
 
-export const updateProject = async (req: AuthRequest, res: Response): Promise<any> => {
+export const updateProject = async (req: AuthRequest, res: Response): Promise<Response> => {
     try {
         const userId = req.user.id;
         const { id } = req.params;
@@ -124,7 +124,7 @@ export const updateProject = async (req: AuthRequest, res: Response): Promise<an
     }
 };
 
-export const deleteProject = async (req: AuthRequest, res: Response): Promise<any> => {
+export const deleteProject = async (req: AuthRequest, res: Response): Promise<Response> => {
     try {
         const userId = req.user.id;
         const { id } = req.params;

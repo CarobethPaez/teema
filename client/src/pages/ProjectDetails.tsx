@@ -30,7 +30,7 @@ const ProjectDetails = () => {
         } finally {
             setIsLoading(false);
         }
-    }, [id, navigate]);
+    }, [id, navigate, t]);
 
     useEffect(() => {
         fetchProject();

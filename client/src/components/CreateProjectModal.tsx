@@ -22,7 +22,7 @@ const CreateProjectModal = ({ onClose, onProjectCreated }: CreateProjectModalPro
             onProjectCreated();
             onClose();
         } catch (err: unknown) {
-            const errorMessage = err instanceof Error ? (err as any).response?.data?.message || err.message : 'Failed to create project';
+            const errorMessage = err instanceof Error ? (err as { response?: { data?: { message?: string } } }).response?.data?.message || err.message : 'Failed to create project';
             setError(errorMessage);
         } finally {
             setIsLoading(false);

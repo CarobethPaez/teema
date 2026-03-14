@@ -3,10 +3,10 @@ import { prisma } from '../lib/prisma.js';
 import { getIO } from '../lib/socket.js';
 
 interface AuthRequest extends Request {
-    user?: any;
+    user?: { id: string };
 }
 
-export const createTask = async (req: AuthRequest, res: Response): Promise<any> => {
+export const createTask = async (req: AuthRequest, res: Response): Promise<Response> => {
     try {
         const userId = req.user.id;
         const { title, description, projectId, assigneeId } = req.body;
@@ -54,7 +54,7 @@ export const createTask = async (req: AuthRequest, res: Response): Promise<any> 
     }
 };
 
-export const updateTask = async (req: AuthRequest, res: Response): Promise<any> => {
+export const updateTask = async (req: AuthRequest, res: Response): Promise<Response> => {
     try {
         const userId = req.user.id;
         const { id } = req.params;
@@ -99,7 +99,7 @@ export const updateTask = async (req: AuthRequest, res: Response): Promise<any> 
     }
 };
 
-export const deleteTask = async (req: AuthRequest, res: Response): Promise<any> => {
+export const deleteTask = async (req: AuthRequest, res: Response): Promise<Response> => {
     try {
         const userId = req.user.id;
         const { id } = req.params;
