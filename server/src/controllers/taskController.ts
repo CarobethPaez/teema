@@ -3,12 +3,12 @@ import { prisma } from '../lib/prisma.js';
 import { getIO } from '../lib/socket.js';
 
 interface AuthRequest extends Request {
-    user?: { id: string };
+    user: { id: string };
 }
 
-export const createTask = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const createTask = async (req: Request, res: Response): Promise<Response> => {
     try {
-        const userId = req.user.id;
+        const userId = (req as AuthRequest).user.id;
         const { title, description, projectId, assigneeId } = req.body;
 
         if (!title || !projectId) {
@@ -54,9 +54,9 @@ export const createTask = async (req: AuthRequest, res: Response): Promise<Respo
     }
 };
 
-export const updateTask = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const updateTask = async (req: Request, res: Response): Promise<Response> => {
     try {
-        const userId = req.user.id;
+        const userId = (req as AuthRequest).user.id;
         const { id } = req.params;
         const { title, description, status, assigneeId } = req.body;
 
@@ -99,9 +99,9 @@ export const updateTask = async (req: AuthRequest, res: Response): Promise<Respo
     }
 };
 
-export const deleteTask = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const deleteTask = async (req: Request, res: Response): Promise<Response> => {
     try {
-        const userId = req.user.id;
+        const userId = (req as AuthRequest).user.id;
         const { id } = req.params;
 
         const task = await prisma.task.findUnique({

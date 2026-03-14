@@ -43,7 +43,8 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
             if (socketRef.current) {
                 socketRef.current.disconnect();
                 socketRef.current = null;
-                setSocket(null);
+                // Avoid calling setState synchronously in effect
+                setTimeout(() => setSocket(null), 0);
             }
         }
     }, [isAuthenticated]);

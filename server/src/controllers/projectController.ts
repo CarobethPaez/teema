@@ -2,13 +2,13 @@ import { Request, Response } from 'express';
 import { prisma } from '../lib/prisma.js';
 
 interface AuthRequest extends Request {
-    user?: { id: string };
+    user: { id: string };
 }
 
-export const createProject = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const createProject = async (req: Request, res: Response): Promise<Response> => {
     try {
         const { name, description } = req.body;
-        const userId = req.user.id;
+        const userId = (req as AuthRequest).user.id;
 
         if (!name) {
             return res.status(400).json({ message: 'Project name is required' });
@@ -32,9 +32,9 @@ export const createProject = async (req: AuthRequest, res: Response): Promise<Re
     }
 };
 
-export const getProjects = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getProjects = async (req: Request, res: Response): Promise<Response> => {
     try {
-        const userId = req.user.id;
+        const userId = (req as AuthRequest).user.id;
 
         const projects = await prisma.project.findMany({
             where: {
@@ -61,9 +61,9 @@ export const getProjects = async (req: AuthRequest, res: Response): Promise<Resp
     }
 };
 
-export const getProject = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const getProject = async (req: Request, res: Response): Promise<Response> => {
     try {
-        const userId = req.user.id;
+        const userId = (req as AuthRequest).user.id;
         const { id } = req.params;
 
         const project = await prisma.project.findUnique({
@@ -96,9 +96,9 @@ export const getProject = async (req: AuthRequest, res: Response): Promise<Respo
     }
 };
 
-export const updateProject = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const updateProject = async (req: Request, res: Response): Promise<Response> => {
     try {
-        const userId = req.user.id;
+        const userId = (req as AuthRequest).user.id;
         const { id } = req.params;
         const { name, description } = req.body;
 
@@ -124,9 +124,9 @@ export const updateProject = async (req: AuthRequest, res: Response): Promise<Re
     }
 };
 
-export const deleteProject = async (req: AuthRequest, res: Response): Promise<Response> => {
+export const deleteProject = async (req: Request, res: Response): Promise<Response> => {
     try {
-        const userId = req.user.id;
+        const userId = (req as AuthRequest).user.id;
         const { id } = req.params;
 
         const project = await prisma.project.findUnique({ where: { id } });
