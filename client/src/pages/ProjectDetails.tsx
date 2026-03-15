@@ -4,10 +4,12 @@ import { projectService } from '../services/projectService';
 import type { Project } from '../services/projectService';
 import TaskCard from '../components/TaskCard';
 import CreateTaskModal from '../components/CreateTaskModal';
-import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
+import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd';
 import { useSocket } from '../context/SocketContext';
+import { taskService } from '../services/taskService';
 import type { Task } from '../services/taskService';
 import { useTranslation } from 'react-i18next';
+import toast from 'react-hot-toast';
 
 const ProjectDetails = () => {
     const { id } = useParams<{ id: string }>();
@@ -47,6 +49,7 @@ const ProjectDetails = () => {
                 ...prev,
                 tasks: [...(prev.tasks || []), newTask]
             } : null);
+            toast.success(t('tasks.notifications.created', { defaultValue: `Task "${newTask.title}" created` }), { id: `task-create-${newTask.id}` });
         });
 
         socket.on('task:updated', (updatedTask: Task) => {
@@ -56,6 +59,7 @@ const ProjectDetails = () => {
                     task.id === updatedTask.id ? updatedTask : task
                 )
             } : null);
+            toast(t('tasks.notifications.updated', { defaultValue: `Task "${updatedTask.title}" updated` }), { icon: '🔄', id: `task-update-${updatedTask.id}` });
         });
 
         socket.on('task:deleted', ({ id: deletedTaskId }: { id: string }) => {
@@ -63,6 +67,7 @@ const ProjectDetails = () => {
                 ...prev,
                 tasks: (prev.tasks || []).filter(task => task.id !== deletedTaskId)
             } : null);
+            toast.error(t('tasks.notifications.deleted', { defaultValue: 'A task was deleted' }), { id: `task-delete-${deletedTaskId}` });
         });
 
         return () => {
@@ -88,7 +93,8 @@ const ProjectDetails = () => {
         setProject(prev => {
             if (!prev) return prev;
             
-            const updatedTasks = prev.tasks.map(t => {
+            const tasksArray = prev.tasks || [];
+            const updatedTasks = tasksArray.map(t => {
                 if (t.id === draggableId) {
                     return { ...t, status: newStatus };
                 }

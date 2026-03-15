@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import ProjectDetails from './pages/ProjectDetails';
 import CreateProject from './pages/CreateProject';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Router>
+        <Toaster position="bottom-right" />
       </SocketProvider>
     </AuthProvider>
   );
