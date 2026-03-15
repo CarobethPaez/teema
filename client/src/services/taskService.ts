@@ -8,6 +8,8 @@ export interface Task {
     status: 'todo' | 'in-progress' | 'done';
     projectId: string;
     assigneeId?: string;
+    priority: number;
+    dueDate?: string | null;
     createdAt: string;
     updatedAt: string;
     assignee?: User;
@@ -18,6 +20,8 @@ export interface CreateTaskData {
     description?: string;
     projectId: string;
     assigneeId?: string;
+    priority?: number;
+    dueDate?: string | null;
 }
 
 export interface UpdateTaskData {
@@ -25,6 +29,8 @@ export interface UpdateTaskData {
     description?: string;
     status?: 'todo' | 'in-progress' | 'done';
     assigneeId?: string | null;
+    priority?: number;
+    dueDate?: string | null;
 }
 
 export const taskService = {

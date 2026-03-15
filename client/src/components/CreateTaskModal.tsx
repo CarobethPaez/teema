@@ -13,6 +13,8 @@ const CreateTaskModal = ({ project, onClose, onTaskCreated }: CreateTaskModalPro
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [assigneeId, setAssigneeId] = useState('');
+    const [priority, setPriority] = useState<number>(0);
+    const [dueDate, setDueDate] = useState<string>('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const { t } = useTranslation();
@@ -27,7 +29,9 @@ const CreateTaskModal = ({ project, onClose, onTaskCreated }: CreateTaskModalPro
                 title,
                 description,
                 projectId: project.id,
-                assigneeId: assigneeId || undefined
+                assigneeId: assigneeId || undefined,
+                priority,
+                dueDate: dueDate || null
             });
             onTaskCreated();
             onClose();
@@ -89,6 +93,31 @@ const CreateTaskModal = ({ project, onClose, onTaskCreated }: CreateTaskModalPro
                             placeholder="Details about the task..."
                             style={{ resize: 'vertical' }}
                         />
+                    </div>
+
+                    <div style={{ marginBottom: '1.5rem', display: 'flex', gap: '1rem' }}>
+                        <div style={{ flex: 1 }}>
+                            <label style={{ display: 'block', marginBottom: '0.5rem' }}>{t('tasks.priority', 'Priority')}</label>
+                            <select
+                                className="input"
+                                value={priority}
+                                onChange={(e) => setPriority(Number(e.target.value))}
+                            >
+                                <option value={0}>{t('tasks.priority_none', 'None')}</option>
+                                <option value={1}>{t('tasks.priority_low', 'Low')}</option>
+                                <option value={2}>{t('tasks.priority_medium', 'Medium')}</option>
+                                <option value={3}>{t('tasks.priority_high', 'High')}</option>
+                            </select>
+                        </div>
+                        <div style={{ flex: 1 }}>
+                            <label style={{ display: 'block', marginBottom: '0.5rem' }}>{t('tasks.due_date', 'Due Date')}</label>
+                            <input
+                                type="date"
+                                className="input"
+                                value={dueDate}
+                                onChange={(e) => setDueDate(e.target.value)}
+                            />
+                        </div>
                     </div>
 
                     <div style={{ marginBottom: '1.5rem' }}>

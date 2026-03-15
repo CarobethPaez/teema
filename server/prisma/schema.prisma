@@ -39,6 +39,8 @@ model Task {
   title       String
   description String?
   status      String    @default("todo")
+  priority    Int       @default(0) // 0: None, 1: Low, 2: Medium, 3: High
+  dueDate     DateTime?
   projectId   String
   assigneeId  String?
   createdAt   DateTime  @default(now())

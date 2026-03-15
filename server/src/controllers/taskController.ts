@@ -9,7 +9,7 @@ interface AuthRequest extends Request {
 export const createTask = async (req: Request, res: Response): Promise<Response> => {
     try {
         const userId = (req as AuthRequest).user.id;
-        const { title, description, projectId, assigneeId } = req.body;
+        const { title, description, projectId, assigneeId, priority, dueDate } = req.body;
 
         if (!title || !projectId) {
             return res.status(400).json({ message: 'Title and Project ID are required' });
@@ -36,6 +36,8 @@ export const createTask = async (req: Request, res: Response): Promise<Response>
                 description,
                 projectId,
                 assigneeId: assigneeId || null,
+                priority: priority ? parseInt(priority, 10) : 0,
+                dueDate: dueDate ? new Date(dueDate) : null,
                 status: 'todo' // Default status
             },
             include: {
@@ -58,7 +60,7 @@ export const updateTask = async (req: Request, res: Response): Promise<Response>
     try {
         const userId = (req as AuthRequest).user.id;
         const { id } = req.params;
-        const { title, description, status, assigneeId } = req.body;
+        const { title, description, status, assigneeId, priority, dueDate } = req.body;
 
         const task = await prisma.task.findUnique({
             where: { id },
@@ -81,7 +83,9 @@ export const updateTask = async (req: Request, res: Response): Promise<Response>
                 title,
                 description,
                 status,
-                assigneeId
+                assigneeId,
+                priority: priority !== undefined ? parseInt(priority, 10) : undefined,
+                dueDate: dueDate !== undefined ? (dueDate ? new Date(dueDate) : null) : undefined,
             },
             include: {
                 assignee: {

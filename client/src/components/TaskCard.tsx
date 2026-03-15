@@ -58,6 +58,35 @@ const TaskCard = ({ task, onTaskUpdated }: TaskCardProps) => {
                 </button>
             </div>
 
+            {(task.priority > 0 || task.dueDate) && (
+                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem', fontSize: '0.75rem', flexWrap: 'wrap' }}>
+                    {task.priority > 0 && (
+                        <span style={{
+                            padding: '2px 6px',
+                            borderRadius: '12px',
+                            backgroundColor: task.priority === 3 ? 'rgba(239, 68, 68, 0.2)' : task.priority === 2 ? 'rgba(245, 158, 11, 0.2)' : 'rgba(59, 130, 246, 0.2)',
+                            color: task.priority === 3 ? '#ef4444' : task.priority === 2 ? '#f59e0b' : '#3b82f6',
+                            fontWeight: 600
+                        }}>
+                            {task.priority === 3 ? 'High Priority' : task.priority === 2 ? 'Medium Priority' : 'Low Priority'}
+                        </span>
+                    )}
+                    {task.dueDate && (
+                        <span style={{
+                            padding: '2px 6px',
+                            borderRadius: '12px',
+                            backgroundColor: 'rgba(107, 114, 128, 0.1)',
+                            color: 'var(--text-secondary)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.2rem'
+                        }}>
+                            📅 {new Date(task.dueDate).toLocaleDateString()}
+                        </span>
+                    )}
+                </div>
+            )}
+
             {task.description && (
                 <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1rem' }}>
                     {task.description}

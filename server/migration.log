@@ -1,0 +1,3 @@
+﻿Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "taskmanager", schema "public" at "localhost:5433"
+
